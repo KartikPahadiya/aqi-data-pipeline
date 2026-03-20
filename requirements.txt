@@ -1,8 +1,7 @@
 streamlit
 pandas
 numpy
-matplotlib
-networkx
-scikit-learn
 torch
-requests
+scikit-learn
+joblib
+matplotlib
