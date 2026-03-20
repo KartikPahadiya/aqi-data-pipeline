@@ -23,7 +23,6 @@ def fetch_all_data():
         r = requests.get(url, params=params, headers=headers)
 
         if r.status_code != 200:
-            print("Server error:", r.status_code)
             time.sleep(5)
             continue
 
@@ -38,26 +37,22 @@ def fetch_all_data():
     return pd.DataFrame(all_data)
 
 # -------------------------------
-# Fetch new data
-# -------------------------------
 new_df = fetch_all_data()
-new_df["collection_time"] = datetime.now()
+new_df["collection_time"] = datetime.now().strftime("%Y-%m-%d")
 
 file_path = "aqi_history.csv"
 
-# -------------------------------
-# Merge instead of blind append
-# -------------------------------
 if os.path.exists(file_path):
     old_df = pd.read_csv(file_path)
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    if today in old_df["collection_time"].values:
+        print("Already updated today")
+        exit()
+
     final_df = pd.concat([old_df, new_df])
-    final_df.drop_duplicates(inplace=True)
 else:
     final_df = new_df
 
-# -------------------------------
-# Save updated dataset
-# -------------------------------
 final_df.to_csv(file_path, index=False)
-
-print("Updated dataset:", final_df.shape)
+print("Data updated:", final_df.shape)
