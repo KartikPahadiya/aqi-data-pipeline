@@ -1,12 +1,12 @@
-name: AQI Daily Fetch
+name: AQI Pipeline
 
 on:
   schedule:
-    - cron: '30 10 * * *'   # 4 PM IST
+    - cron: '30 10 * * *'
   workflow_dispatch:
 
 jobs:
-  run-script:
+  run:
     runs-on: ubuntu-latest
 
     permissions:
@@ -15,21 +15,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install libraries
-        run: pip install pandas requests
+      - run: pip install pandas numpy torch scikit-learn requests
 
-      - name: Run script
-        run: python fetch.py
+      - run: python fetch.py
+      - run: python train_model.py
 
-      - name: Commit updated CSV
+      - name: Commit updates
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add aqi_history.csv
-          git commit -m "Update AQI data" || echo "No changes"
+          git add .
+          git commit -m "Auto update data + model" || echo "No changes"
           git push
