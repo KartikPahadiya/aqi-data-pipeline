@@ -38,7 +38,7 @@ def fetch_all_data():
 
 # -------------------------------
 new_df = fetch_all_data()
-new_df["collection_time"] = datetime.now().strftime("%Y-%m-%d")
+new_df["collection_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 file_path = "aqi_history.csv"
 
