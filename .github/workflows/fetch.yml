@@ -24,13 +24,11 @@ jobs:
       - run: python fetch.py
       - run: python train_model.py
 
-      # ✅ UPDATED COMMIT STEP
       - name: Commit updates
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
           git add aqi_history.csv pollution_stgcn_model.pth scaler.pkl
-
           git commit -m "Update data + model" || echo "No changes"
           git push
