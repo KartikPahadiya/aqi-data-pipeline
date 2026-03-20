@@ -10,8 +10,13 @@ from sklearn.metrics.pairwise import haversine_distances
 MODEL_PATH = "pollution_stgcn_model.pth"
 
 history = pd.read_csv("aqi_history.csv", on_bad_lines="skip")
-history["collection_time"] = pd.to_datetime(history["collection_time"])
-
+history["collection_time"] = pd.to_datetime(
+    history["collection_time"],
+    errors="coerce",
+    format="mixed",
+    dayfirst=True
+)
+history = history.dropna(subset=["collection_time"])
 pivot = history.pivot_table(
     index=["collection_time","station"],
     columns="pollutant_id",
