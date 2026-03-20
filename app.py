@@ -10,7 +10,14 @@ from sklearn.metrics.pairwise import haversine_distances
 st.title("🌍 AQI Dashboard + Prediction")
 
 df = pd.read_csv("aqi_history.csv")
-df["collection_time"] = pd.to_datetime(df["collection_time"])
+df["collection_time"] = pd.to_datetime(
+    df["collection_time"],
+    errors="coerce",
+    format="mixed",
+    dayfirst=True
+)
+
+df = df.dropna(subset=["collection_time"])
 
 st.dataframe(df.tail(20))
 
